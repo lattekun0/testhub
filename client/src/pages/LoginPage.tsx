@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import PasswordInput from '@/components/ui/PasswordInput'
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
@@ -33,7 +34,7 @@ export default function LoginPage() {
         <CardHeader>
           <CardTitle className="text-center">登入</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent>
           <form className="space-y-4" onSubmit={handleLogin}>
             <div className="grid gap-2">
               <Label htmlFor="text">帳號</Label>
@@ -45,16 +46,7 @@ export default function LoginPage() {
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">密碼</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="輸入密碼"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+            <PasswordInput value={password} onChange={setPassword} />
 
             {error && <p className="text-red-500 text-sm font-bold">{error}</p>}
 
