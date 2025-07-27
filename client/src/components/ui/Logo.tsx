@@ -1,10 +1,25 @@
 import { Link } from 'react-router-dom'
 
-export default function Logo() {
+type LogoProps = {
+  to?: string
+  imgSize?: string
+  textSize?: string
+  className?: string
+}
+
+export default function Logo({
+  to = '/',
+  imgSize = 'W-12',
+  textSize = 'text-3xl',
+  className = '',
+}: LogoProps) {
   return (
-    <Link to="/" className="flex items-center w-fit mb-6 cursor-pointer hover:opacity-80">
-      <img src="/logo.svg" alt="Logo" className="w-12" />
-      <span className="ml-2 text-3xl font-bold">TESTHUB</span>
+    <Link
+      to={to}
+      className={`flex items-center w-fit mb-6 cursor-pointer hover:opacity-80 ${className}`}
+    >
+      <img src="/logo.svg" alt="Logo" className={imgSize} />
+      <span className={`ml-2 font-bold ${textSize}`}>TESTHUB</span>
     </Link>
   )
 }

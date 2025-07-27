@@ -43,7 +43,7 @@ export default function LoginPage() {
           <DarkModeToggle className="absolute top-2 right-2" />
 
           <CardHeader>
-            <Logo />
+            <Logo dynamicColor={true}/>
             <CardTitle className="text-xl">歡迎</CardTitle>
           </CardHeader>
           <CardContent>
