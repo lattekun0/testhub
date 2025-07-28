@@ -43,7 +43,7 @@ export default function LoginPage() {
           <DarkModeToggle className="absolute top-2 right-2" />
 
           <CardHeader>
-            <Logo dynamicColor={true}/>
+            <Logo />
             <CardTitle className="text-xl">歡迎</CardTitle>
           </CardHeader>
           <CardContent>
@@ -62,7 +62,7 @@ export default function LoginPage() {
 
               {error && <p className="text-red-500 text-sm font-bold">{error}</p>}
 
-              <Button className="w-full cursor-pointer" type="submit">
+              <Button className="w-full cursor-pointer" variant="login" type="submit">
                 <LogIn /> 登入
               </Button>
             </form>

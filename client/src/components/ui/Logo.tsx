@@ -16,7 +16,7 @@ export default function Logo({
   return (
     <Link
       to={to}
-      className={`flex items-center w-fit mb-6 cursor-pointer hover:opacity-80 ${className}`}
+      className={`flex items-center w-fit cursor-pointer hover:opacity-80 ${className}`}
     >
       <img src="/logo.svg" alt="Logo" className={imgSize} />
       <span className={`ml-2 font-bold ${textSize}`}>TESTHUB</span>

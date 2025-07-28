@@ -7,20 +7,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { ChevronDown } from 'lucide-react'
 
 export default function Navbar() {
   return (
-    <nav className="flex items-center justify-between px-4 py-2  bg-[#08748c] text-white">
+    <nav className="flex items-center justify-between px-4 py-2  bg-[#08546c] text-white">
       {/* 左側：Logo + 專案選單 */}
       <div className="flex items-center gap-4">
         <Logo to="/dashboard" imgSize="w-7" textSize="text-xl" />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost">Projects ▼</Button>
+            <Button variant="nav">
+              Projects
+              <ChevronDown />
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>Project A</DropdownMenuItem>
-            <DropdownMenuItem>Project B</DropdownMenuItem>
+            <DropdownMenuItem variant="custom">Project A</DropdownMenuItem>
+            <DropdownMenuItem variant="custom">Project B</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -29,11 +33,13 @@ export default function Navbar() {
       <div className="flex items-center gap-3">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost">Shawn ▼</Button>
+            <Button variant="nav">
+              Shawn <ChevronDown />
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem variant="custom">Profile</DropdownMenuItem>
+            <DropdownMenuItem variant="custom">Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
