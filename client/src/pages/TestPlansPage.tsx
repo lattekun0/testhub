@@ -5,8 +5,8 @@ export default function DashboardPage() {
 
   return (
      <div>
-      <h1 className="text-2xl font-bold">測試案例</h1>
-      <p className="mt-2">這裡是測試案例的內容。</p>
+      <h1 className="text-2xl font-bold">測試計劃</h1>
+      <p className="mt-2">這裡是測試計劃的內容。</p>
     </div>
   )
 }

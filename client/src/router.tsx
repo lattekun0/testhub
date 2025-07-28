@@ -4,6 +4,8 @@ import DashboardPage from '@/pages/DashboardPage'
 import TestCasesPage from '@/pages/TestCasesPage'
 import TestPlansPage from '@/pages/TestPlansPage'
 import TestRunsPage from '@/pages/TestRunsPage'
+import ProjectSettingsPage from '@/pages/ProjectSettingsPage'
+import ProfilePage from '@/pages/ProfilePage'
 import LoginPage from '@/pages/LoginPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 
@@ -21,6 +23,8 @@ const router = createBrowserRouter([
       { path: 'test-cases', element: <TestCasesPage /> },
       { path: 'test-plans', element: <TestPlansPage /> },
       { path: 'test-runs', element: <TestRunsPage /> },
+      { path: 'settings', element: <ProjectSettingsPage /> },
+      { path: 'profile', element: <ProfilePage /> },
     ],
   },
   {
