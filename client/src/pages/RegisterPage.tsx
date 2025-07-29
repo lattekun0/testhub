@@ -3,29 +3,34 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import PasswordInput from '@/components/ui/PasswordInput'
-import { LogIn, Mail } from 'lucide-react'
+import { UserPlus, ChevronLeft } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import useDocumentTitle from '@/hooks/useDocumentTitle'
-import useLogin from '@/hooks/useLogin'
+import useRegister from '@/hooks/useRegister'
 
-export default function LoginPage() {
-  useDocumentTitle('登入 - Testhub')
+export default function RegisterPage() {
+  useDocumentTitle('註冊 - Testhub')
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    confirmPassword,
+    setConfirmPassword,
+    error,
+    handleRegister,
+  } = useRegister()
 
-  const { email, setEmail, password, setPassword, error, login } = useLogin()
+  const navigate = useNavigate()
 
   return (
     <>
       <CardHeader>
-        <CardTitle className="text-xl">歡迎</CardTitle>
+        <CardTitle className="text-xl">建立您的個人帳號</CardTitle>
       </CardHeader>
 
       <CardContent>
-        <form
-          className="space-y-4"
-          onSubmit={(e) => {
-            e.preventDefault()
-            login()
-          }}
-        >
+        <form className="space-y-4" onSubmit={handleRegister}>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -37,12 +42,13 @@ export default function LoginPage() {
             />
           </div>
 
-          <PasswordInput value={password} onChange={setPassword} />
+          <PasswordInput label="密碼" value={password} onChange={setPassword} />
+          <PasswordInput label="確認密碼" value={confirmPassword} onChange={setConfirmPassword} />
 
           {error && <p className="text-red-500 text-sm font-bold">{error}</p>}
 
           <Button className="w-full cursor-pointer" variant="login" type="submit">
-            <LogIn /> 登入
+            <UserPlus /> 建立帳號
           </Button>
 
           <div className="flex items-center my-4">
@@ -55,9 +61,9 @@ export default function LoginPage() {
             className="w-1/2 cursor-pointer"
             variant="login"
             type="button"
-            onClick={() => location.assign('/register')}
+            onClick={() => navigate('/login')}
           >
-            <Mail /> 使用 Email 註冊
+            <ChevronLeft /> 返回登入
           </Button>
         </form>
       </CardContent>

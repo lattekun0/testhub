@@ -1,7 +1,7 @@
 import useDocumentTitle from '@/hooks/useDocumentTitle'
 
 export default function ProfilePage() {
-  useDocumentTitle('測試案例 - Testhub')
+  useDocumentTitle('個人資料 - Testhub')
 
   return (
     <div>
