@@ -17,7 +17,7 @@ export const register = async (req: Request, res: Response) => {
     const newUser = new User({ name, email, password: hashedPassword })
     await newUser.save()
 
-    const token = signToken({ id: newUser.id }) // 使用 newUser.id（字串）
+    const token = signToken({ id: newUser.id })
 
     res.status(201).json({
       msg: '註冊成功',
