@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { verifyToken } from '../utils/jwt'
 
-export const authMiddlewa = (req: Request, res: Response, next: NextFunction) => {
+export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const token = req.header('Authorization')?.split(' ')[1]
   if (!token) return res.status(401).json({ msg: 'Missing token' })
 
