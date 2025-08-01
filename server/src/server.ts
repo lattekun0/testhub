@@ -19,10 +19,6 @@ mongoose
     console.error('MongoDB connection error:', err)
   })
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello from Express!')
-})
-
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`)
 })
