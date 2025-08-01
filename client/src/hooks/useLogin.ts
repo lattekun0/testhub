@@ -5,6 +5,7 @@ export default function useLogin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
   const login = async () => {
@@ -13,8 +14,10 @@ export default function useLogin() {
       return
     }
 
+    setLoading(true)
+
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch('http://localhost:4000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -25,13 +28,15 @@ export default function useLogin() {
       if (res.ok && data.token) {
         localStorage.setItem('token', data.token)
         setError('')
-        navigate('/dashboard')
+        navigate('/app/dashboard')
       } else {
         setError(data.message || '帳號或密碼錯誤')
       }
     } catch (err) {
       console.error('Login error:', err)
       setError('伺服器錯誤，請稍後再試')
+    } finally{
+      setLoading(false)
     }
   }
 
@@ -42,5 +47,6 @@ export default function useLogin() {
     setPassword,
     error,
     login,
+    loading
   }
 }

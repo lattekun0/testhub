@@ -22,7 +22,7 @@ export default function Navbar() {
     <nav className="flex items-center justify-between px-4 py-2  bg-[#08546c] text-white">
       {/* 左側：Logo + 專案選單 */}
       <div className="flex items-center gap-4">
-        <Logo to="/dashboard" imgSrc="/nav-logo.svg" imgSize="w-7 rounded-md" textSize="text-xl" />
+        <Logo to="/app/dashboard" imgSrc="/nav-logo.svg" imgSize="w-7 rounded-md" textSize="text-xl" />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="nav">
@@ -46,7 +46,7 @@ export default function Navbar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem variant="custom" onClick={()=>navigate('/profile')}>
+            <DropdownMenuItem variant="custom" onClick={()=>navigate('/app/profile')}>
               <UserPen />
               個人資料
             </DropdownMenuItem>

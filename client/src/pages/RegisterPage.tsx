@@ -13,12 +13,15 @@ export default function RegisterPage() {
   const {
     email,
     setEmail,
+    name,
+    setUsername,
     password,
     setPassword,
     confirmPassword,
     setConfirmPassword,
     error,
-    handleRegister,
+    register,
+    loading,
   } = useRegister()
 
   const navigate = useNavigate()
@@ -30,7 +33,7 @@ export default function RegisterPage() {
       </CardHeader>
 
       <CardContent>
-        <form className="space-y-4" onSubmit={handleRegister}>
+        <form className="space-y-4" onSubmit={register}>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -42,13 +45,32 @@ export default function RegisterPage() {
             />
           </div>
 
+          <Label htmlFor="username">使用者名稱</Label>
+          <Input
+            type="text"
+            id="username"
+            name="username"
+            value={name}
+            placeholder="輸入使用者名稱"
+            onChange={(e) => setUsername(e.target.value)}
+          />
           <PasswordInput label="密碼" value={password} onChange={setPassword} />
           <PasswordInput label="確認密碼" value={confirmPassword} onChange={setConfirmPassword} />
 
           {error && <p className="text-red-500 text-sm font-bold">{error}</p>}
 
           <Button className="w-full cursor-pointer" variant="login" type="submit">
-            <UserPlus /> 建立帳號
+            {loading ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="animate-spin w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full" />
+                建立中...
+              </div>
+            ) : (
+              <>
+                <UserPlus />
+                建立帳號
+              </>
+            )}
           </Button>
 
           <div className="flex items-center my-4">

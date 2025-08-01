@@ -10,28 +10,35 @@ import ProfilePage from '@/pages/ProfilePage'
 import LoginPage from '@/pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import NotFoundPage from '@/pages/NotFoundPage'
-
+import ProtectedRoute from './components/ProtectedRoute'
+import { Navigate } from 'react-router-dom'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <AuthLayout />,
     children: [
+      { index: true, element: <Navigate to="/login" replace /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
     ],
   },
   {
-    path: '/',
-    element: <Layout />,
+    path: '/app',
+    element: (
+      <ProtectedRoute>
+      <Layout />
+      </ProtectedRoute>
+    ),
+
     children: [
-      { path: '', element: <DashboardPage /> },
+      { index: true, element: <Navigate to="/app/dashboard" /> },
       { path: 'dashboard', element: <DashboardPage /> },
       { path: 'test-cases', element: <TestCasesPage /> },
       { path: 'test-plans', element: <TestPlansPage /> },
       { path: 'test-runs', element: <TestRunsPage /> },
       { path: 'settings', element: <ProjectSettingsPage /> },
-      { path: 'profile', element: <ProfilePage /> },
+      { path: '/app/profile', element: <ProfilePage /> },
     ],
   },
   {
