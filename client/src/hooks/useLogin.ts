@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export default function useLogin() {
   const [email, setEmail] = useState('')
@@ -27,6 +28,7 @@ export default function useLogin() {
 
       if (res.ok && data.token) {
         localStorage.setItem('token', data.token)
+        useAuthStore.getState().setUser(data.user)
         setError('')
         navigate('/app/dashboard')
       } else {
@@ -35,7 +37,7 @@ export default function useLogin() {
     } catch (err) {
       console.error('Login error:', err)
       setError('伺服器錯誤，請稍後再試')
-    } finally{
+    } finally {
       setLoading(false)
     }
   }
@@ -47,6 +49,6 @@ export default function useLogin() {
     setPassword,
     error,
     login,
-    loading
+    loading,
   }
 }

@@ -9,9 +9,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ChevronDown, LogOut, UserPen } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export default function Navbar() {
   const navigate = useNavigate()
+  const user = useAuthStore((state) => state.user)
 
   const handleLogout = () => {
     localStorage.removeItem('token')
@@ -42,7 +44,7 @@ export default function Navbar() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="nav">
-              Shawn <ChevronDown />
+              {user?.name ?? '使用者'} <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>

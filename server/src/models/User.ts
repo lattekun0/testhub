@@ -1,6 +1,5 @@
-import mongoose, {  Schema } from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 import { IUser } from '../types/user'
-
 
 const userSchema = new Schema<IUser>(
   {

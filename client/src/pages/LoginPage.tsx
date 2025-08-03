@@ -6,13 +6,13 @@ import PasswordInput from '@/components/ui/PasswordInput'
 import { LogIn, Mail } from 'lucide-react'
 import useDocumentTitle from '@/hooks/useDocumentTitle'
 import useLogin from '@/hooks/useLogin'
-import { useNavigate  } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export default function LoginPage() {
   useDocumentTitle('登入 - Testhub')
 
   const { email, setEmail, password, setPassword, error, login, loading } = useLogin()
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
     <>
@@ -44,7 +44,16 @@ export default function LoginPage() {
           {error && <p className="text-red-500 text-sm font-bold">{error}</p>}
 
           <Button className="w-full cursor-pointer" variant="login" type="submit">
-            <LogIn /> {loading ? '登入中' : '登入'}
+            {loading ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="animate-spin w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full" />
+                登入中...
+              </div>
+            ) : (
+              <>
+                <LogIn /> 登入
+              </>
+            )}
           </Button>
 
           <div className="flex items-center my-4">

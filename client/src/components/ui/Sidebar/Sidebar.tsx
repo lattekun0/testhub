@@ -7,11 +7,7 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false)
 
   return (
-    <aside
-      className={`flex flex-col justify-between bg-white dark:bg-[#181414] ${
-        collapsed ? 'w-16' : 'w-32'
-      }`}
-    >
+    <aside className={`flex flex-col justify-between ${collapsed ? 'w-16' : 'w-32'}`}>
       {/* 上方導覽區 */}
       <div className="flex flex-col gap-1 px-1 py-2">
         {mainLinks.map((link) => (
