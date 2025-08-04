@@ -2,8 +2,9 @@ import { useEffect, useState, useCallback } from 'react'
 import { useAuthStore } from '@/stores/useAuthStore'
 
 export function useProfileForm() {
-  const user = useAuthStore((state) => state.user)
+  const { user, setUser } = useAuthStore()
 
+  const [avatar, setAvatar] = useState(user?.avatar ?? '')
   const [name, setName] = useState(user?.name ?? '')
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -11,7 +12,9 @@ export function useProfileForm() {
   const [errorsMap, setErrorsMap] = useState<Record<string, string>>({})
   const [isDirty, setIsDirty] = useState(false)
   const [canSave, setCanSave] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
 
+  const isAvatarChanged = avatar !== (user?.avatar ?? '')
   const isNameChanged = name !== (user?.name ?? '')
 
   const validateProfile = useCallback(() => {
@@ -37,30 +40,62 @@ export function useProfileForm() {
   }, [currentPassword, newPassword, confirmPassword])
 
   useEffect(() => {
-    const changed = isNameChanged || !!newPassword || !!confirmPassword
+    const changed = isAvatarChanged || isNameChanged || !!newPassword || !!confirmPassword
     const noErrors = validateProfile()
     setIsDirty(changed)
     setCanSave(changed && noErrors)
-  }, [name, currentPassword, newPassword, confirmPassword, user, isNameChanged, validateProfile])
-
-  const handleSave = () => {
-    if (!validateProfile()) return
-
-    // 👉 TODO: 發送 API 更新請求
-    console.log('送出資料:', { name, currentPassword, newPassword })
-    setIsDirty(false)
-  }
+  }, [
+    avatar,
+    name,
+    currentPassword,
+    newPassword,
+    confirmPassword,
+    user,
+    isAvatarChanged,
+    isNameChanged,
+    validateProfile,
+  ])
 
   const handleCancel = () => {
+    setAvatar(user?.avatar ?? '')
     setName(user?.name ?? '')
     setCurrentPassword('')
     setNewPassword('')
     setConfirmPassword('')
     setErrorsMap({})
     setIsDirty(false)
+    setIsSaving(false)
   }
 
+  const handleSave = async () => {
+    if (isSaving) return
+    setIsSaving(true)
+
+    const token = localStorage.getItem('token')
+
+    try {
+      const res = await fetch('http://localhost:4000/api/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ avatar, name, currentPassword, newPassword }),
+      })
+
+      if (!res.ok) {
+        const { message } = await res.json()
+        throw new Error(message || '更新失敗')
+      }
+
+      const data = await res.json()
+      setUser(data)
+
+      handleCancel()
+    } catch (err) {
+      console.error('更新失敗:', err)
+      alert(err instanceof Error ? err.message : '更新資料時發生錯誤')
+    }
+  }
   return {
+    avatar,
     name,
     currentPassword,
     newPassword,
@@ -68,6 +103,7 @@ export function useProfileForm() {
     errorsMap,
     canSave,
     isDirty,
+    setAvatar,
     setName,
     setCurrentPassword,
     setNewPassword,

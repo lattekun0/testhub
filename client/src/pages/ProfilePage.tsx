@@ -9,6 +9,7 @@ import { useProfileForm } from '@/hooks/useProfileForm'
 export default function ProfilePage() {
   useDocumentTitle('個人資料 - Testhub')
   const {
+    avatar,
     name,
     currentPassword,
     newPassword,
@@ -16,6 +17,7 @@ export default function ProfilePage() {
     errorsMap,
     canSave,
     isDirty,
+    setAvatar,
     setName,
     setCurrentPassword,
     setNewPassword,
@@ -36,7 +38,7 @@ export default function ProfilePage() {
           title="個人照片"
           description="為您的帳戶上傳個人檔案照片。"
         >
-          <AvatarUploader />
+          <AvatarUploader avatar={avatar} onChange={setAvatar}/>
         </ProfileSection>
 
         <ProfileSection

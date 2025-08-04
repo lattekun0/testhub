@@ -1,9 +1,13 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { UserRound, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-export default function AvatarUploader() {
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
+type AvatarUploaderProps = {
+  avatar?: string
+  onChange: (newAvatar: string) => void
+}
+
+export default function AvatarUploader({ avatar, onChange }: AvatarUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -11,17 +15,18 @@ export default function AvatarUploader() {
     if (file) {
       const reader = new FileReader()
       reader.onload = () => {
-        setImageUrl(reader.result as string)
+        onChange(reader.result as string)
+        if (inputRef.current) {
+        inputRef.current.value = ''
+      }
       }
       reader.readAsDataURL(file)
     }
   }
 
   const handleRemoveImage = () => {
-    setImageUrl(null)
-    if (inputRef.current) {
-      inputRef.current.value = ''
-    }
+    if (inputRef.current) inputRef.current.value = ''
+    onChange('')
   }
 
   const triggerFileInput = () => {
@@ -38,8 +43,8 @@ export default function AvatarUploader() {
         className="w-20 h-20 rounded-full bg-[#00718c33] dark:bg-[#00718ccf] flex items-center justify-center cursor-pointer overflow-hidden"
         onClick={triggerFileInput}
       >
-        {imageUrl ? (
-          <img src={imageUrl} alt="頭像" className="object-cover w-full h-full" />
+        {avatar ? (
+          <img src={avatar} alt="頭像" className="object-cover w-full h-full" />
         ) : (
           <UserRound className="w-10 h-10 text-black dark:text-white" />
         )}
@@ -47,7 +52,7 @@ export default function AvatarUploader() {
 
       {/* 上傳/移除按鈕 */}
       <div>
-        {imageUrl ? (
+        {avatar ? (
           <Button
             variant="destructive"
             size="sm"
