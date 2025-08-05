@@ -18,3 +18,9 @@ export interface LoginInput {
   email: string
   password: string
 }
+
+export interface IUserPayload {
+  id: string
+  email: string
+  name?: string
+}

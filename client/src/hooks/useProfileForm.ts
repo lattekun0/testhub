@@ -74,7 +74,7 @@ export function useProfileForm() {
     const token = localStorage.getItem('token')
 
     try {
-      const res = await fetch('http://localhost:4000/api/profile', {
+      const res = await fetch('http://localhost:4000/api/user/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ avatar, name, currentPassword, newPassword }),
@@ -87,11 +87,11 @@ export function useProfileForm() {
 
       const data = await res.json()
       setUser(data)
-
-      handleCancel()
     } catch (err) {
       console.error('更新失敗:', err)
       alert(err instanceof Error ? err.message : '更新資料時發生錯誤')
+    } finally {
+      handleCancel()
     }
   }
   return {
