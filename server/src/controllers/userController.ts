@@ -5,10 +5,13 @@ import { comparePassword, hashPassword } from '../utils/hash'
 export const updateUserProfile = async (req: Request, res: Response) => {
   try {
     const userId = req.user!.id
-    const { name, currentPassword, newPassword } = req.body
+    const { name, avatar, currentPassword, newPassword } = req.body
 
     const user = await User.findById(userId)
     if (!user) return res.status(404).json({ message: '使用者不存在' })
+
+    if (name) user.name = name
+    if (avatar !== undefined) user.avatar = avatar
 
     if (newPassword) {
       const isValid = await comparePassword(currentPassword, user.password)
@@ -16,10 +19,6 @@ export const updateUserProfile = async (req: Request, res: Response) => {
         return res.status(400).json({ message: '原密碼錯誤' })
       }
       user.password = await hashPassword(newPassword)
-    }
-
-    if (name) {
-      user.name = name
     }
 
     await user.save()

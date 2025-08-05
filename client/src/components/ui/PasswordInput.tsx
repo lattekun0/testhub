@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label'
 interface PasswordInputProps {
   label?: string
   value: string
+  maxLength?: number
   onChange: (value: string) => void
   id?: string
   placeholder?: string
@@ -14,6 +15,7 @@ interface PasswordInputProps {
 export default function PasswordInput({
   label = '密碼',
   value,
+  maxLength = 64,
   onChange,
   id = 'password',
   placeholder = '輸入密碼',
@@ -29,6 +31,7 @@ export default function PasswordInput({
           type={showPassword ? 'text' : 'password'}
           placeholder={placeholder}
           value={value}
+          maxLength={maxLength}
           onChange={(e) => onChange(e.target.value)}
           className="pr-10"
         />

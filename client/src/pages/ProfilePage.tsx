@@ -17,13 +17,14 @@ export default function ProfilePage() {
     errorsMap,
     canSave,
     isDirty,
+    isSaving,
     setAvatar,
     setName,
     setCurrentPassword,
     setNewPassword,
     setConfirmPassword,
     handleSave,
-    handleCancel,
+    handleCancelClick,
   } = useProfileForm()
 
   return (
@@ -38,7 +39,7 @@ export default function ProfilePage() {
           title="個人照片"
           description="為您的帳戶上傳個人檔案照片。"
         >
-          <AvatarUploader avatar={avatar} onChange={setAvatar}/>
+          <AvatarUploader avatar={avatar} onChange={setAvatar} />
         </ProfileSection>
 
         <ProfileSection
@@ -53,6 +54,7 @@ export default function ProfilePage() {
             <input
               id="name"
               type="text"
+              maxLength={20}
               className="border rounded px-1 py-0.5 w-full dark:bg-[rgb(16,16,16)]"
               value={name}
               onChange={(e) => {
@@ -106,15 +108,24 @@ export default function ProfilePage() {
         <div className="flex p-3 gap-2 bg-[rgba(0,113,140,0.05)] dark:bg-[rgb(40,40,40)]">
           <Button
             onClick={handleSave}
-            disabled={!canSave}
-            className={`w-18 h-6 rounded cursor-pointer ${canSave ? 'bg-[rgb(0,177,144)] text-white' : 'text-gray-900 dark:text-white dark:bg-[rgb(64,64,64)]'}`}
+            disabled={!canSave || isSaving}
+            className={`w-22 h-6 rounded cursor-pointer ${isSaving || canSave ? 'bg-[rgb(0,177,144)] text-white' : 'text-gray-900 dark:text-white dark:bg-[rgb(64,64,64)]'}`}
           >
-            <Save />
-            儲存
+            {isSaving ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="animate-spin w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full" />
+                儲存中...
+              </div>
+            ) : (
+              <>
+                <Save />
+                儲存
+              </>
+            )}
           </Button>
 
           <Button
-            onClick={handleCancel}
+            onClick={handleCancelClick}
             disabled={!isDirty}
             className={`w-12 h-6 rounded cursor-pointer ${isDirty ? 'bg-[rgba(0,113,140,0.3)] text-white' : 'text-gray-900 dark:text-white dark:bg-[rgb(64,64,64)]'}`}
           >

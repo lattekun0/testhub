@@ -56,9 +56,15 @@ export function useProfileForm() {
     validateProfile,
   ])
 
-  const handleCancel = () => {
-    setAvatar(user?.avatar ?? '')
-    setName(user?.name ?? '')
+  const handleCancelClick = () => {
+    handleCancel(user)
+  }
+
+  const handleCancel = (source: typeof user = user!) => {
+    if (!source) return
+
+    setAvatar(source?.avatar || '')
+    setName(source?.name || '')
     setCurrentPassword('')
     setNewPassword('')
     setConfirmPassword('')
@@ -87,13 +93,14 @@ export function useProfileForm() {
 
       const data = await res.json()
       setUser(data)
+      handleCancel(data)
     } catch (err) {
       console.error('更新失敗:', err)
       alert(err instanceof Error ? err.message : '更新資料時發生錯誤')
-    } finally {
-      handleCancel()
+      setIsSaving(false)
     }
   }
+
   return {
     avatar,
     name,
@@ -103,12 +110,14 @@ export function useProfileForm() {
     errorsMap,
     canSave,
     isDirty,
+    isSaving,
     setAvatar,
     setName,
     setCurrentPassword,
     setNewPassword,
     setConfirmPassword,
     handleSave,
+    handleCancelClick,
     handleCancel,
   }
 }
