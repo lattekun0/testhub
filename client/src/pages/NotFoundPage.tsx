@@ -1,11 +1,11 @@
 import useDocumentTitle from '@/hooks/useDocumentTitle'
 
 export default function DashboardPage() {
-  useDocumentTitle('測試計劃 - Testhub')
+  useDocumentTitle('NotFoundPage - Testhub')
 
   return (
     <>
-      <h1></h1>
+      <h1>NotFoundPage</h1>
     </>
   )
 }

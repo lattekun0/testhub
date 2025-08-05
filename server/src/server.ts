@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import authRouter from './routes/authRoutes'
 import userRouter from './routes/user'
+import projectRouter from './routes/projectRoutes'
 import cors from 'cors'
 import { PORT, MONGODB_URI } from './config/env'
 
@@ -11,6 +12,7 @@ app.use(express.json())
 
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
+app.use('/api/projects', projectRouter)
 
 mongoose
   .connect(MONGODB_URI)

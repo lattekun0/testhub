@@ -33,7 +33,7 @@ export default function Navbar() {
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="nav">
+            <Button variant="nav" className='w-40'>
               Projects
               <ChevronDown />
             </Button>

@@ -32,7 +32,7 @@ export default function useRegister() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, name, password}),
+        body: JSON.stringify({ email, name, password }),
       })
 
       const data = await res.json()
@@ -40,6 +40,31 @@ export default function useRegister() {
       if (!res.ok) {
         setError(data.message || '註冊失敗')
         return
+      }
+
+      const userId = data?.user?._id
+      if (!userId) {
+        setError('無法取得使用者資料')
+        return
+      }
+
+      // 建立預設專案
+      const projectRes = await fetch('http://localhost:4000/api/projects', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: 'My First Project',
+          description: '這是你的第一個專案',
+          owner: userId,
+        }),
+      })
+
+      if (!projectRes.ok) {
+        const projectError = await projectRes.json()
+        console.error('建立預設專案失敗:', projectError.message)
+        // 不擋住註冊流程，僅顯示錯誤
       }
 
       navigate('/login')
