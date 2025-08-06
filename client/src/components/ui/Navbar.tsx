@@ -11,15 +11,13 @@ import { ChevronDown, LogOut, UserPen } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { UserRound } from 'lucide-react'
+import useLogout from '@/hooks/useLogout'
+import { ProjectSelector } from './ProjectSelector'
 
 export default function Navbar() {
   const navigate = useNavigate()
   const user = useAuthStore((state) => state.user)
-
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    navigate('/login')
-  }
+  const logout = useLogout()
 
   return (
     <nav className="flex items-center justify-between px-4 py-2  bg-[#08546c] text-white">
@@ -31,18 +29,7 @@ export default function Navbar() {
           imgSize="w-7 rounded-md"
           textSize="text-xl"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="nav" className='w-40'>
-              Projects
-              <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem variant="custom">Project A</DropdownMenuItem>
-            <DropdownMenuItem variant="custom">Project B</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <ProjectSelector />
       </div>
 
       {/* 右側：使用者選單 + 暗色切換 */}
@@ -63,7 +50,7 @@ export default function Navbar() {
               <UserPen />
               個人資料
             </DropdownMenuItem>
-            <DropdownMenuItem variant="custom" onClick={handleLogout}>
+            <DropdownMenuItem variant="custom" onClick={logout}>
               <LogOut />
               登出
             </DropdownMenuItem>

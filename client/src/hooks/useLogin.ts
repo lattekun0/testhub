@@ -18,16 +18,17 @@ export default function useLogin() {
     setLoading(true)
 
     try {
-      const res = await fetch('http://localhost:4000/api/auth/login', {
+      const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       })
 
       const data = await res.json()
+      console.log('登入 response:', data)
 
-      if (res.ok && data.token) {
-        localStorage.setItem('token', data.token)
+      if (res.ok && data.user) {
         useAuthStore.getState().setUser(data.user)
         setError('')
         navigate('/app/dashboard')

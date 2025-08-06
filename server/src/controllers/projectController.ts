@@ -19,3 +19,13 @@ export const createProject = async (req: Request, res: Response) => {
     return res.status(500).json({ message: '伺服器錯誤，請稍後再試' })
   }
 }
+
+export const getUserProjects = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user!.id
+    const projects = await Project.find({ owner: userId }).sort({ createdAt: 1 })
+    res.json(projects)
+  } catch (error) {
+    res.status(500).json({ message: '取得專案列表失敗', error })
+  }
+}

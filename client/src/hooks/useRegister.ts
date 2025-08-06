@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export default function useRegister() {
   const [email, setEmail] = useState('')
@@ -10,6 +11,7 @@ export default function useRegister() {
   const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
+  const { setUser } = useAuthStore()
 
   const register = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,11 +29,10 @@ export default function useRegister() {
         return
       }
 
-      const res = await fetch('http://localhost:4000/api/auth/register', {
+      const res = await fetch('/api/auth/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, name, password }),
       })
 
@@ -42,32 +43,13 @@ export default function useRegister() {
         return
       }
 
-      const userId = data?.user?._id
-      if (!userId) {
+      if (!data.user) {
         setError('無法取得使用者資料')
         return
       }
 
-      // 建立預設專案
-      const projectRes = await fetch('http://localhost:4000/api/projects', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: 'My First Project',
-          description: '這是你的第一個專案',
-          owner: userId,
-        }),
-      })
-
-      if (!projectRes.ok) {
-        const projectError = await projectRes.json()
-        console.error('建立預設專案失敗:', projectError.message)
-        // 不擋住註冊流程，僅顯示錯誤
-      }
-
-      navigate('/login')
+      setUser(data.user)
+      navigate('/app/dashboard')
     } catch (err) {
       console.error('Register error:', err)
       setError('伺服器錯誤，請稍後再試')

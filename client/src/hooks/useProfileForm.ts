@@ -77,18 +77,17 @@ export function useProfileForm() {
     if (isSaving) return
     setIsSaving(true)
 
-    const token = localStorage.getItem('token')
-
     try {
-      const res = await fetch('http://localhost:4000/api/user/profile', {
+      const res = await fetch('/api/user/profile', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ avatar, name, currentPassword, newPassword }),
       })
 
       if (!res.ok) {
         const { message } = await res.json()
-        throw new Error(message || '更新失敗')
+        throw new Error(message ?? '更新失敗')
       }
 
       const data = await res.json()

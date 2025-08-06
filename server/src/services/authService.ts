@@ -2,6 +2,7 @@ import { User } from '../models/User'
 import { RegisterInput, LoginInput } from '../types/auth'
 import { signToken } from '../utils/jwt'
 import { hashPassword, comparePassword } from '../utils/hash'
+import Project from '../models/Project'
 
 export const registerUser = async ({ name, email, password }: RegisterInput) => {
   const existingUser = await User.findOne({ email })
@@ -10,6 +11,12 @@ export const registerUser = async ({ name, email, password }: RegisterInput) => 
   const hashedPassword = await hashPassword(password)
   const newUser = new User({ name, email, password: hashedPassword })
   await newUser.save()
+
+  await Project.create({
+    name: 'My First Project',
+    description: '這是你的第一個專案',
+    owner: newUser._id
+  })
 
   const token = signToken({ id: newUser.id })
   return { token, user: { name: newUser.name, email: newUser.email } }

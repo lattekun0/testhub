@@ -27,7 +27,7 @@ const router = createBrowserRouter([
     path: '/app',
     element: (
       <ProtectedRoute>
-      <Layout />
+        <Layout />
       </ProtectedRoute>
     ),
 
@@ -38,7 +38,7 @@ const router = createBrowserRouter([
       { path: 'test-plans', element: <TestPlansPage /> },
       { path: 'test-runs', element: <TestRunsPage /> },
       { path: 'settings', element: <ProjectSettingsPage /> },
-      { path: '/app/profile', element: <ProfilePage /> },
+      { path: 'profile', element: <ProfilePage /> },
     ],
   },
   {
