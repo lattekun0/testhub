@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-interface Project {
+export interface Project {
   _id: string
   name: string
   description?: string
@@ -22,21 +22,13 @@ export const useProjectStore = create<ProjectStore>((set) => ({
   fetchProjects: async () => {
     try {
       const res = await fetch('/api/projects', { credentials: 'include' })
-      const data = await res.json()
-      set({ projects: data, currentProject: data[0] ?? null })
+      const data: Project[] = await res.json()
+      set({
+        projects: data,
+        currentProject: data.length > 0 ? data[0] : null,
+      })
     } catch (error) {
       console.error('載入專案失敗', error)
-    }
-  },
-  refreshProjects: async () => {
-    try {
-      const res = await fetch('/api/projects', {
-        credentials: 'include',
-      })
-      const data = await res.json()
-      set({ projects: data, currentProject: data[0] ?? null })
-    } catch (error) {
-      console.error('更新專案失敗', error)
     }
   },
 }))

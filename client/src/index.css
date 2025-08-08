@@ -118,3 +118,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+.gutter {
+  background-clip: padding-box;
+  cursor: col-resize;
+  width: 8px;
+}
+
+.gutter:hover {
+  background-color: rgba(0, 86, 107, 0.25);
+}
