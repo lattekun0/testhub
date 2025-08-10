@@ -4,7 +4,7 @@ export default function DashboardPage() {
   useDocumentTitle('測試案例 - Testhub')
 
   return (
-    <div className='flex w-full gap-2'>
+    <div className='flex flex-1 gap-2'>
       {/* 分類資料夾 */}
       <div className="flex flex-col w-80 p-4 rounded-md bg-white dark:bg-[rgb(32,32,32)]">
         <h2 className="text-md font-bold">測試案例資料夾</h2>

@@ -12,7 +12,7 @@ export default function AppLayout() {
   }, [fetchProjects])
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#00718c2b] dark:bg-[rgba(10,10,10,0.56)]">
+    <div className="flex flex-col h-screen bg-[#00718c2b] dark:bg-[rgba(10,10,10,0.56)]">
       <Navbar />
 
       <div className="flex flex-1 p-2 gap-2">
