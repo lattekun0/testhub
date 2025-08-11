@@ -1,10 +1,5 @@
 import { create } from 'zustand'
-
-export interface Project {
-  _id: string
-  name: string
-  description?: string
-}
+import type { Project } from '@/types/project'
 
 interface ProjectStore {
   projects: Project[]
