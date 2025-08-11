@@ -19,7 +19,7 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline',
         login: 'bg-primary text-primary-foreground shadow-xs hover:bg-[#08748c] hover:text-white',
         nav: 'bg-[#0d6e81] hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/20',
-        coustom: 'gap-1 max-h-6.5 bg-[rgb(0,228,185)] text-black font-bold rounded hover:text-white hover:bg-[rgb(0,177,144)]'
+        green: 'gap-1 max-h-6.5 bg-[rgb(0,228,185)] text-black font-bold rounded hover:text-white hover:bg-[rgb(0,177,144)]'
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',

@@ -27,15 +27,25 @@ export default function ProjectSettingsPage() {
           <div className="flex flex-col justify-between rounded-md border border-[rgba(0,113,140,0.3)] dark:border-[rgba(250,250,250,0.12)]">
             {/* 上方工具列 */}
             <div className="flex justify-between bg-[rgba(0,113,140,0.05)] py-2 px-3">
-              <Button variant={'coustom'} onClick={() => setIsModalOpen(true)}>
+              <Button variant={'green'} onClick={() => setIsModalOpen(true)}>
                 <Plus />
                 建立新專案
               </Button>
 
               <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                {/* 你的建立專案表單放這裡 */}
+                <h2 className="text-lg font-bold mb-4">建立專案</h2>
+                <form>
+                  <input type="text" placeholder="專案名稱" className="border p-2 w-full mb-4" />
+                  <textarea placeholder="專案描述" className="border p-2 w-full mb-4" />
+                  <div className="flex justify-end gap-2">
+                    <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>
+                      取消
+                    </Button>
+                    <Button type="submit">建立</Button>
+                  </div>
+                </form>
               </Modal>
-              
+
               <input
                 type="text"
                 placeholder="關鍵字搜尋"
