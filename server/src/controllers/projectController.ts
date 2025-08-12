@@ -1,31 +1,22 @@
-import { Request, Response } from 'express'
-import Project from '../models/Project'
+import { Request, Response, NextFunction } from 'express'
+import { createProjectService, getUserProjectsService } from '../services/projectService'
 
-export const createProject = async (req: Request, res: Response) => {
-  const { name, description, owner } = req.body
-
-  if (!name || !owner) {
-    return res.status(400).json({ message: '專案名稱與擁有者為必填' })
-  }
-
+export const createProject = async (req: Request, res: Response, next: NextFunction) => {
+  const { name, description } = req.body
+  const owner = req.user!.id
   try {
-    const newProject = new Project({ name, description, owner })
-
-    await newProject.save()
-
-    return res.status(201).json({ message: '專案建立成功', project: newProject })
-  } catch (err) {
-    console.error('建立專案錯誤:', err)
-    return res.status(500).json({ message: '伺服器錯誤，請稍後再試' })
+    const project = await createProjectService(name, description, owner)
+    return res.status(201).json({ message: '專案建立成功', project })
+  } catch (error) {
+    next(error)
   }
 }
 
-export const getUserProjects = async (req: Request, res: Response) => {
+export const getUserProjects = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user!.id
-    const projects = await Project.find({ owner: userId }).sort({ createdAt: 1 })
+    const projects = await getUserProjectsService(req.user!.id)
     res.json(projects)
   } catch (error) {
-    res.status(500).json({ message: '取得專案列表失敗', error })
+    next(error)
   }
 }

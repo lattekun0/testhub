@@ -30,7 +30,7 @@ export const ProjectSelector = () => {
             <DropdownMenuItem
               key={project._id}
               onClick={() => handleSelect(project)}
-              className={project._id === currentProject?._id ? 'font-bold' : ''}
+              className={project._id === currentProject?._id ? 'font-bold bg-blue-100 dark:bg-gray-600' : ''}
             >
               {project.name}
             </DropdownMenuItem>
