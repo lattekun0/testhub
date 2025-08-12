@@ -6,11 +6,15 @@ import { useProjectStore } from '@/stores/projectStore'
 import { useState } from 'react'
 import NewProjectModal from '@/components/NewProjectModal'
 import { useCreateProject } from '@/hooks/useCreateProject'
+import KeywordSearch from '@/components/ui/KeywordSearch'
 
 export default function ProjectSettingsPage() {
   useDocumentTitle('測試案例 - Testhub')
 
   const projects = useProjectStore((s) => s.projects)
+  // const { projectId: currentProjectId } = useParams()
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
+
   const [keyword, setKeyword] = useState('')
   const filteredProjects = projects.filter((p) =>
     p.name.toLowerCase().includes(keyword.toLowerCase())
@@ -21,6 +25,12 @@ export default function ProjectSettingsPage() {
   const handleCreateProject = async (data: { name: string; description: string }) => {
     await createProject(data)
     setIsModalOpen(false)
+  }
+
+  const selectedProject = filteredProjects.find((p) => p._id === selectedProjectId)
+
+  const handleSelectProject = (id: string) => {
+    setSelectedProjectId(id)
   }
 
   return (
@@ -39,13 +49,7 @@ export default function ProjectSettingsPage() {
                 建立新專案
               </Button>
 
-              <input
-                type="text"
-                placeholder="關鍵字搜尋"
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                className="border rounded text-sm font-bold bg-white dark:bg-[rgb(16,16,16)] focus:outline-none focus:ring-1 focus:ring-sky-500"
-              />
+              <KeywordSearch keyword={keyword} setKeyword={setKeyword} />
             </div>
 
             {/* 表格 */}
@@ -62,7 +66,9 @@ export default function ProjectSettingsPage() {
                   {filteredProjects.map((project) => (
                     <tr
                       key={project._id}
-                      className="border-b border-zinc-300 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-800"
+                      onClick={() => handleSelectProject(project._id)}
+                      className={`border-b border-zinc-300 dark:border-zinc-700 hover:bg-gray-200/30 dark:hover:bg-zinc-700/30
+                        ${project._id === selectedProjectId ? 'bg-[rgba(0,113,140,0.18)]' : ''}`}
                     >
                       <td className="px-1 py-2">{project.name}</td>
                       <td className="px-1 py-2">{project.description}</td>
@@ -79,13 +85,23 @@ export default function ProjectSettingsPage() {
             <div className="flex">尾頁</div>
           </div>
 
-          <div className="flex flex-col rounded-md border border-[rgba(0,113,140,0.3)] dark:border-[rgba(250,250,250,0.12)]"></div>
+          <div className="flex flex-col rounded-md border border-[rgba(0,113,140,0.3)] dark:border-[rgba(250,250,250,0.12)]">
+            {selectedProject ? (
+              <>
+                <h2>{selectedProject.name}</h2>
+                <p>{selectedProject.description}</p>
+                {/* 這裡放修改、刪除按鈕 */}
+              </>
+            ) : (
+              <p>請從左側選擇一個專案查看設定</p>
+            )}
+          </div>
         </Split>
       </div>
 
       <NewProjectModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false) }
+        onClose={() => setIsModalOpen(false)}
         onSubmit={handleCreateProject}
         loading={loading}
         error={error}
