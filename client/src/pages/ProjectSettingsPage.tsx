@@ -1,7 +1,7 @@
 import useDocumentTitle from '@/hooks/useDocumentTitle'
 import Split from 'react-split'
 import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
+import { Plus, PanelRightClose, PanelLeftClose } from 'lucide-react'
 import { useProjectStore } from '@/stores/projectStore'
 import { useState } from 'react'
 import NewProjectModal from '@/components/NewProjectModal'
@@ -14,6 +14,8 @@ export default function ProjectSettingsPage() {
   const projects = useProjectStore((s) => s.projects)
   // const { projectId: currentProjectId } = useParams()
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [hoveredProjectId, setHoveredProjectId] = useState<string | null>(null)
 
   const [keyword, setKeyword] = useState('')
   const filteredProjects = projects.filter((p) =>
@@ -39,7 +41,11 @@ export default function ProjectSettingsPage() {
       <hr className="border-zinc-300 dark:border-zinc-700" />
 
       <div className="flex-1 flex flex-col mt-1">
-        <Split className="flex flex-1 py-2" sizes={[60, 40]} minSize={100}>
+        <Split
+          className="flex flex-1 py-2"
+          sizes={selectedProject && !isCollapsed ? [60, 40] : [100, 0]}
+          minSize={300}
+        >
           {/* 左側專案清單 */}
           <div className="flex flex-col justify-between rounded-md border border-[rgba(0,113,140,0.3)] dark:border-[rgba(250,250,250,0.12)]">
             {/* 上方工具列 */}
@@ -60,23 +66,45 @@ export default function ProjectSettingsPage() {
                     <th className="text-left px-1 py-2">名稱</th>
                     <th className="text-left px-1 py-2">描述</th>
                     <th className="text-left px-1 py-2">建立日期</th>
+                    <th className="w-20 px-1 py-2">{/* 留空給icon欄 */}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredProjects.map((project) => (
-                    <tr
-                      key={project._id}
-                      onClick={() => handleSelectProject(project._id)}
-                      className={`border-b border-zinc-300 dark:border-zinc-700 hover:bg-gray-200/30 dark:hover:bg-zinc-700/30
-                        ${project._id === selectedProjectId ? 'bg-[rgba(0,113,140,0.18)]' : ''}`}
-                    >
-                      <td className="px-1 py-2">{project.name}</td>
-                      <td className="px-1 py-2">{project.description}</td>
-                      <td className="px-1 py-2">
-                        {new Date(project.createdAt).toLocaleDateString()}
-                      </td>
-                    </tr>
-                  ))}
+                  {filteredProjects.map((project) => {
+                    const isSelected = project._id === selectedProjectId
+                    const isHovered = project._id === hoveredProjectId
+                    return (
+                      <tr
+                        key={project._id}
+                        onClick={() => handleSelectProject(project._id)}
+                        onMouseEnter={() => setHoveredProjectId(project._id)}
+                        onMouseLeave={() => setHoveredProjectId(null)}
+                        className={`border-b border-zinc-300 dark:border-zinc-700 hover:bg-gray-200/30 dark:hover:bg-zinc-700/30
+                        ${isSelected ? 'bg-[rgba(0,113,140,0.18)]' : ''}`}
+                      >
+                        <td className="px-1 py-2">{project.name}</td>
+                        <td className="px-1 py-2">{project.description}</td>
+                        <td className="px-1 py-2">
+                          {new Date(project.createdAt).toLocaleDateString()}
+                        </td>
+                        <td>
+                          {isSelected || isHovered ? (
+                            <div
+                              className="inline-flex items-center justify-center rounded bg-[rgba(115,183,200,0.5)] hover:bg-[rgba(87,170,194,0.9)] dark:bg-[rgba(0,113,140,0.7)] dark:hover:bg-[rgba(53,156,182,0.95)] transition-colors cursor-pointer p-1"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setIsCollapsed(!isCollapsed)
+                              }}
+                            >
+                              <PanelLeftClose size={15} />
+                            </div>
+                          ) : (
+                            ''
+                          )}
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
@@ -85,15 +113,16 @@ export default function ProjectSettingsPage() {
             <div className="flex">尾頁</div>
           </div>
 
-          <div className="flex flex-col rounded-md border border-[rgba(0,113,140,0.3)] dark:border-[rgba(250,250,250,0.12)]">
-            {selectedProject ? (
+          {/* 右側專案設定 */}
+          <div
+            className={`flex flex-col rounded-md border border-[rgba(0,113,140,0.3)] dark:border-[rgba(250,250,250,0.12)]
+      ${!selectedProject ? 'hidden' : ''}`}
+          >
+            {selectedProject && (
               <>
                 <h2>{selectedProject.name}</h2>
                 <p>{selectedProject.description}</p>
-                {/* 這裡放修改、刪除按鈕 */}
               </>
-            ) : (
-              <p>請從左側選擇一個專案查看設定</p>
             )}
           </div>
         </Split>
