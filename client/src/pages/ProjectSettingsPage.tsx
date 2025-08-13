@@ -1,12 +1,13 @@
 import useDocumentTitle from '@/hooks/useDocumentTitle'
 import Split from 'react-split'
 import { Button } from '@/components/ui/button'
-import { Plus, PanelRightClose, PanelLeftClose } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { useProjectStore } from '@/stores/projectStore'
 import { useState } from 'react'
 import NewProjectModal from '@/components/NewProjectModal'
 import { useCreateProject } from '@/hooks/useCreateProject'
 import KeywordSearch from '@/components/ui/KeywordSearch'
+import CollapseToggleButton from '@/components/ui/CollapseToggleButton'
 
 export default function ProjectSettingsPage() {
   useDocumentTitle('測試案例 - Testhub')
@@ -44,7 +45,7 @@ export default function ProjectSettingsPage() {
         <Split
           className="flex flex-1 py-2"
           sizes={selectedProject && !isCollapsed ? [60, 40] : [100, 0]}
-          minSize={300}
+          minSize={0}
         >
           {/* 左側專案清單 */}
           <div className="flex flex-col justify-between rounded-md border border-[rgba(0,113,140,0.3)] dark:border-[rgba(250,250,250,0.12)]">
@@ -76,7 +77,10 @@ export default function ProjectSettingsPage() {
                     return (
                       <tr
                         key={project._id}
-                        onClick={() => handleSelectProject(project._id)}
+                        onClick={() => {
+                          handleSelectProject(project._id)
+                          setIsCollapsed(false)
+                        }}
                         onMouseEnter={() => setHoveredProjectId(project._id)}
                         onMouseLeave={() => setHoveredProjectId(null)}
                         className={`border-b border-zinc-300 dark:border-zinc-700 hover:bg-gray-200/30 dark:hover:bg-zinc-700/30
@@ -88,19 +92,20 @@ export default function ProjectSettingsPage() {
                           {new Date(project.createdAt).toLocaleDateString()}
                         </td>
                         <td>
-                          {isSelected || isHovered ? (
-                            <div
-                              className="inline-flex items-center justify-center rounded bg-[rgba(115,183,200,0.5)] hover:bg-[rgba(87,170,194,0.9)] dark:bg-[rgba(0,113,140,0.7)] dark:hover:bg-[rgba(53,156,182,0.95)] transition-colors cursor-pointer p-1"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                setIsCollapsed(!isCollapsed)
-                              }}
-                            >
-                              <PanelLeftClose size={15} />
-                            </div>
-                          ) : (
-                            ''
-                          )}
+                          <CollapseToggleButton
+                            isSelected={isSelected}
+                            isHovered={isHovered}
+                            projectId={project._id}
+                            onToggle={(id, selected) => {
+                              if (selected) {
+                                setSelectedProjectId(null)
+                                setIsCollapsed(true)
+                              } else {
+                                setSelectedProjectId(id)
+                                setIsCollapsed(false)
+                              }
+                            }}
+                          />
                         </td>
                       </tr>
                     )
