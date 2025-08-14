@@ -1,13 +1,14 @@
 import useDocumentTitle from '@/hooks/useDocumentTitle'
 import Split from 'react-split'
 import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
+import { Plus, FolderOpenDot } from 'lucide-react'
 import { useProjectStore } from '@/stores/projectStore'
 import { useState } from 'react'
 import NewProjectModal from '@/components/NewProjectModal'
 import { useCreateProject } from '@/hooks/useCreateProject'
 import KeywordSearch from '@/components/ui/KeywordSearch'
 import CollapseToggleButton from '@/components/ui/CollapseToggleButton'
+import PanelHeader from '@/components/ui/PanelHeader'
 
 export default function ProjectSettingsPage() {
   useDocumentTitle('測試案例 - Testhub')
@@ -30,7 +31,9 @@ export default function ProjectSettingsPage() {
     setIsModalOpen(false)
   }
 
-  const selectedProject = filteredProjects.find((p) => p._id === selectedProjectId)
+  const selectedProject =
+    filteredProjects.find((p) => p._id === selectedProjectId) ??
+    projects.find((p) => p._id === selectedProjectId)
 
   const handleSelectProject = (id: string) => {
     setSelectedProjectId(id)
@@ -50,7 +53,7 @@ export default function ProjectSettingsPage() {
           {/* 左側專案清單 */}
           <div className="flex flex-col justify-between rounded-md border border-[rgba(0,113,140,0.3)] dark:border-[rgba(250,250,250,0.12)]">
             {/* 上方工具列 */}
-            <div className="flex justify-between bg-[rgba(0,113,140,0.05)] py-2 px-3">
+            <div className="flex justify-between bg-[rgba(0,113,140,0.05)] dark:bg-[rgb(40,40,40)] py-2 px-3">
               <Button variant={'green'} onClick={() => setIsModalOpen(true)}>
                 <Plus />
                 建立新專案
@@ -93,17 +96,12 @@ export default function ProjectSettingsPage() {
                         </td>
                         <td>
                           <CollapseToggleButton
-                            isSelected={isSelected}
-                            isHovered={isHovered}
-                            projectId={project._id}
-                            onToggle={(id, selected) => {
-                              if (selected) {
-                                setSelectedProjectId(null)
-                                setIsCollapsed(true)
-                              } else {
-                                setSelectedProjectId(id)
-                                setIsCollapsed(false)
-                              }
+                            id={project._id}
+                            selected={isSelected}
+                            hovered={isHovered}
+                            onToggle={(id, newSelected) => {
+                              setSelectedProjectId(newSelected ? id : null)
+                              setIsCollapsed(!newSelected)
                             }}
                           />
                         </td>
@@ -115,19 +113,52 @@ export default function ProjectSettingsPage() {
             </div>
 
             {/* 表格 */}
-            <div className="flex">尾頁</div>
+            <div className="flex p-3 bg-[rgba(0,113,140,0.05)] dark:bg-[rgb(40,40,40)]">
+              ..個結果
+            </div>
           </div>
 
           {/* 右側專案設定 */}
           <div
-            className={`flex flex-col rounded-md border border-[rgba(0,113,140,0.3)] dark:border-[rgba(250,250,250,0.12)]
+            className={`flex flex-col flex-1 rounded-md border border-[rgba(0,113,140,0.3)] dark:border-[rgba(250,250,250,0.12)]
       ${!selectedProject ? 'hidden' : ''}`}
           >
+            <PanelHeader
+              title="專案"
+              titleIcon={<FolderOpenDot size={20} />}
+              onClose={() => {
+                setSelectedProjectId(null)
+                setIsCollapsed(true)
+              }}
+            />
             {selectedProject && (
-              <>
-                <h2>{selectedProject.name}</h2>
-                <p>{selectedProject.description}</p>
-              </>
+              <div className='flex flex-col h-full justify-between'>
+                <div className="p-3 text-sm">
+                  <label htmlFor="name" className="text-gray-400 font-bold">
+                    名稱<span className="pl-0.5 text-red-600">*</span>
+                  </label>
+                  <input
+                    id="name"
+                    type="text"
+                    placeholder="專案名稱"
+                    value={selectedProject.name}
+                    className="border p-0.5 w-full mb-4 dark:bg-[rgba(10,10,10,0.56)]"
+                  />
+
+                  <label htmlFor="description" className="text-gray-400 font-bold">
+                    描述
+                  </label>
+                  <textarea
+                    id="description"
+                    placeholder="輸入您的專案簡短描述"
+                    value={selectedProject.description}
+                    className="border p-0.5 w-full mb-4 dark:bg-[rgba(10,10,10,0.56)]"
+                  />
+                </div>
+                <div className="flex p-3 bg-[rgba(0,113,140,0.05)] dark:bg-[rgb(40,40,40)]">
+                  ..個結果
+                </div>
+              </div>
             )}
           </div>
         </Split>
