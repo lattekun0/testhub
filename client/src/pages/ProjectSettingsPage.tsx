@@ -6,6 +6,7 @@ import { useProjectStore } from '@/stores/projectStore'
 import { useState, useEffect } from 'react'
 import NewProjectModal from '@/components/NewProjectModal'
 import { useCreateProject } from '@/hooks/useCreateProject'
+import { useUpdateProject } from '@/hooks/useUpdateProject'
 import KeywordSearch from '@/components/ui/KeywordSearch'
 import CollapseToggleButton from '@/components/ui/CollapseToggleButton'
 import PanelHeader from '@/components/ui/PanelHeader'
@@ -28,19 +29,11 @@ export default function ProjectSettingsPage() {
   )
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { createProject, loading, error } = useCreateProject()
-
-  const handleCreateProject = async (data: { name: string; description: string }) => {
-    await createProject(data)
-    setIsModalOpen(false)
-  }
+  const { updateProject, saving } = useUpdateProject()
 
   const selectedProject =
     filteredProjects.find((p) => p._id === selectedProjectId) ??
     projects.find((p) => p._id === selectedProjectId)
-
-  const handleSelectProject = (id: string) => {
-    setSelectedProjectId(id)
-  }
 
   // 當選擇專案時，把原始值放進可編輯欄位
   useEffect(() => {
@@ -53,6 +46,21 @@ export default function ProjectSettingsPage() {
   const handleClose = () => {
     setSelectedProjectId(null)
     setIsCollapsed(true)
+  }
+
+  const handleSelectProject = (id: string) => {
+    setSelectedProjectId(id)
+  }
+
+  const handleCreateProject = async (data: { name: string; description: string }) => {
+    await createProject(data)
+    setIsModalOpen(false)
+  }
+
+  const handleUpdateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!selectedProjectId) return
+    await updateProject(selectedProjectId, { name, description })
   }
 
   // 判斷是否有更動過
@@ -154,7 +162,10 @@ export default function ProjectSettingsPage() {
             />
             {selectedProject && (
               <div className="flex flex-col h-full">
-                <form className="flex flex-col h-full justify-between text-sm">
+                <form
+                  className="flex flex-col h-full justify-between text-sm"
+                  onSubmit={handleUpdateSubmit}
+                >
                   {/* 上半：欄位區，允許滾動 */}
                   <div className="p-3 text-sm flex-1 overflow-y-auto">
                     <label htmlFor="name" className="text-gray-400 font-bold">
@@ -183,7 +194,7 @@ export default function ProjectSettingsPage() {
 
                   {/* 下半：固定在底部的按鈕區 */}
                   <FormActionButtons
-                    loading={loading}
+                    loading={saving}
                     canSubmit={canSubmit}
                     onCancel={handleClose}
                     submitText="儲存"
