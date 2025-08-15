@@ -3,12 +3,13 @@ import Split from 'react-split'
 import { Button } from '@/components/ui/button'
 import { Plus, FolderOpenDot } from 'lucide-react'
 import { useProjectStore } from '@/stores/projectStore'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import NewProjectModal from '@/components/NewProjectModal'
 import { useCreateProject } from '@/hooks/useCreateProject'
 import KeywordSearch from '@/components/ui/KeywordSearch'
 import CollapseToggleButton from '@/components/ui/CollapseToggleButton'
 import PanelHeader from '@/components/ui/PanelHeader'
+import FormActionButtons from '@/components/ui/FormActionButtons'
 
 export default function ProjectSettingsPage() {
   useDocumentTitle('測試案例 - Testhub')
@@ -18,6 +19,8 @@ export default function ProjectSettingsPage() {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [hoveredProjectId, setHoveredProjectId] = useState<string | null>(null)
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
 
   const [keyword, setKeyword] = useState('')
   const filteredProjects = projects.filter((p) =>
@@ -38,6 +41,27 @@ export default function ProjectSettingsPage() {
   const handleSelectProject = (id: string) => {
     setSelectedProjectId(id)
   }
+
+  // 當選擇專案時，把原始值放進可編輯欄位
+  useEffect(() => {
+    if (selectedProject) {
+      setName(selectedProject.name || '')
+      setDescription(selectedProject.description || '')
+    }
+  }, [selectedProject])
+
+  const handleClose = () => {
+    setSelectedProjectId(null)
+    setIsCollapsed(true)
+  }
+
+  // 判斷是否有更動過
+  const isChanged =
+    name.trim() !== (selectedProject?.name || '') ||
+    description.trim() !== (selectedProject?.description || '')
+
+  // canSubmit 條件
+  const canSubmit = !!name.trim() && isChanged
 
   return (
     <div className="flex-1 flex flex-col px-3 rounded-md bg-white dark:bg-[rgb(32,32,32)] h-full">
@@ -126,38 +150,45 @@ export default function ProjectSettingsPage() {
             <PanelHeader
               title="專案"
               titleIcon={<FolderOpenDot size={20} />}
-              onClose={() => {
-                setSelectedProjectId(null)
-                setIsCollapsed(true)
-              }}
+              onClose={handleClose}
             />
             {selectedProject && (
-              <div className='flex flex-col h-full justify-between'>
-                <div className="p-3 text-sm">
-                  <label htmlFor="name" className="text-gray-400 font-bold">
-                    名稱<span className="pl-0.5 text-red-600">*</span>
-                  </label>
-                  <input
-                    id="name"
-                    type="text"
-                    placeholder="專案名稱"
-                    value={selectedProject.name}
-                    className="border p-0.5 w-full mb-4 dark:bg-[rgba(10,10,10,0.56)]"
-                  />
+              <div className="flex flex-col h-full">
+                <form className="flex flex-col h-full justify-between text-sm">
+                  {/* 上半：欄位區，允許滾動 */}
+                  <div className="p-3 text-sm flex-1 overflow-y-auto">
+                    <label htmlFor="name" className="text-gray-400 font-bold">
+                      名稱<span className="pl-0.5 text-red-600">*</span>
+                    </label>
+                    <input
+                      id="name"
+                      type="text"
+                      placeholder="專案名稱"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="border p-0.5 w-full mb-4 dark:bg-[rgba(10,10,10,0.56)]"
+                    />
 
-                  <label htmlFor="description" className="text-gray-400 font-bold">
-                    描述
-                  </label>
-                  <textarea
-                    id="description"
-                    placeholder="輸入您的專案簡短描述"
-                    value={selectedProject.description}
-                    className="border p-0.5 w-full mb-4 dark:bg-[rgba(10,10,10,0.56)]"
+                    <label htmlFor="description" className="text-gray-400 font-bold">
+                      描述
+                    </label>
+                    <textarea
+                      id="description"
+                      placeholder="輸入您的專案簡短描述"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      className="border p-0.5 w-full mb-4 dark:bg-[rgba(10,10,10,0.56)]"
+                    />
+                  </div>
+
+                  {/* 下半：固定在底部的按鈕區 */}
+                  <FormActionButtons
+                    loading={loading}
+                    canSubmit={canSubmit}
+                    onCancel={handleClose}
+                    submitText="儲存"
                   />
-                </div>
-                <div className="flex p-3 bg-[rgba(0,113,140,0.05)] dark:bg-[rgb(40,40,40)]">
-                  ..個結果
-                </div>
+                </form>
               </div>
             )}
           </div>

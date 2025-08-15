@@ -1,8 +1,8 @@
-import { Button } from '@/components/ui/button'
 import Modal from '@/components/Modal'
 import { useState } from 'react'
 import { FilePlus2 } from 'lucide-react'
 import PanelHeader from './ui/PanelHeader'
+import FormActionButtons from './ui/FormActionButtons'
 
 interface NewProjectModalProps {
   isOpen: boolean
@@ -79,18 +79,7 @@ export default function NewProjectModal({
           {error && <p className="text-red-500 mb-2">{error}</p>}
         </div>
 
-        <div className="flex justify-end gap-2 p-3 bg-[rgba(0,113,140,0.05)] dark:bg-[rgb(40,40,40)]">
-          <Button
-            type="submit"
-            variant={name.trim() ? 'green' : 'gray'}
-            disabled={!name.trim() || loading}
-          >
-            {loading ? '建立中...' : '建立'}
-          </Button>
-          <Button type="button" variant={'blue'} onClick={handleClose}>
-            取消
-          </Button>
-        </div>
+        <FormActionButtons loading={loading} canSubmit={!!name.trim()} onCancel={handleClose} />
       </form>
     </Modal>
   )
