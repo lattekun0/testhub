@@ -2,6 +2,7 @@ import useDocumentTitle from '@/hooks/useDocumentTitle'
 import Split from 'react-split'
 import { Button } from '@/components/ui/button'
 import { Plus, FolderOpenDot } from 'lucide-react'
+import { useAuthStore } from '@/stores/useAuthStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useState, useEffect } from 'react'
 import NewProjectModal from '@/components/NewProjectModal'
@@ -9,6 +10,7 @@ import { useCreateProject } from '@/hooks/useCreateProject'
 import { useUpdateProject } from '@/hooks/useUpdateProject'
 import KeywordSearch from '@/components/ui/KeywordSearch'
 import CollapseToggleButton from '@/components/ui/CollapseToggleButton'
+import DeleteButton from '@/components/ui/DeleteButton'
 import PanelHeader from '@/components/ui/PanelHeader'
 import FormActionButtons from '@/components/ui/FormActionButtons'
 
@@ -16,6 +18,7 @@ export default function ProjectSettingsPage() {
   useDocumentTitle('測試案例 - Testhub')
 
   const projects = useProjectStore((s) => s.projects)
+  const userId = useAuthStore((s) => s.user?._id)
   // const { projectId: currentProjectId } = useParams()
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -67,6 +70,12 @@ export default function ProjectSettingsPage() {
   const isChanged =
     name.trim() !== (selectedProject?.name || '') ||
     description.trim() !== (selectedProject?.description || '')
+
+  // 判斷是否允許編輯
+  const isEditable =
+    selectedProject &&
+    (selectedProject.owner.toString() === userId ||
+      selectedProject.members.some((m) => m.user.toString() === userId && m.role === 'admin'))
 
   // canSubmit 條件
   const canSubmit = !!name.trim() && isChanged
@@ -127,15 +136,24 @@ export default function ProjectSettingsPage() {
                           {new Date(project.createdAt).toLocaleDateString()}
                         </td>
                         <td>
-                          <CollapseToggleButton
-                            id={project._id}
-                            selected={isSelected}
-                            hovered={isHovered}
-                            onToggle={(id, newSelected) => {
-                              setSelectedProjectId(newSelected ? id : null)
-                              setIsCollapsed(!newSelected)
-                            }}
-                          />
+                          <div className="flex items-center space-x-1">
+                            <CollapseToggleButton
+                              id={project._id}
+                              selected={isSelected}
+                              hovered={isHovered}
+                              onToggle={(id, newSelected) => {
+                                setSelectedProjectId(newSelected ? id : null)
+                                setIsCollapsed(!newSelected)
+                              }}
+                            />
+
+                            <DeleteButton
+                              onDelete={() => handleDeleteProject(project._id)}
+                              tooltip="刪除專案"
+                              selected={isSelected}
+                              hovered={isHovered}
+                            />
+                          </div>
                         </td>
                       </tr>
                     )
@@ -178,6 +196,7 @@ export default function ProjectSettingsPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       className="border p-0.5 w-full mb-4 dark:bg-[rgba(10,10,10,0.56)]"
+                      disabled={!isEditable}
                     />
 
                     <label htmlFor="description" className="text-gray-400 font-bold">
@@ -189,6 +208,7 @@ export default function ProjectSettingsPage() {
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       className="border p-0.5 w-full mb-4 dark:bg-[rgba(10,10,10,0.56)]"
+                      disabled={!isEditable}
                     />
                   </div>
 

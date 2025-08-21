@@ -26,11 +26,7 @@ const ProjectSchema: Schema<IProject> = new Schema(
       },
     ],
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 )
 
-const Project = mongoose.model<IProject>('Project', ProjectSchema)
-
-export default Project
+export default mongoose.model<IProject>('Project', ProjectSchema)

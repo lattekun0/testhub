@@ -1,5 +1,11 @@
 import { create } from 'zustand'
-import type { AuthStore } from '@/types/authStore'
+import type { User } from '@/types/user'
+
+interface AuthStore {
+  user: User | null
+  setUser: (user: User | null) => void
+  clearUser: () => void
+}
 
 export const useAuthStore = create<AuthStore>((set) => ({
   user: null,

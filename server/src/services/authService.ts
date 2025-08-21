@@ -15,11 +15,11 @@ export const registerUser = async ({ name, email, password }: RegisterInput) => 
   await Project.create({
     name: 'My First Project',
     description: '這是你的第一個專案',
-    owner: newUser._id
+    owner: newUser._id,
   })
 
   const token = signToken({ id: newUser.id })
-  return { token, user: { name: newUser.name, email: newUser.email } }
+  return { token, user: { _id: newUser.id.toString(), name: newUser.name, email: newUser.email } }
 }
 
 export const loginUser = async ({ email, password }: LoginInput) => {
@@ -30,5 +30,8 @@ export const loginUser = async ({ email, password }: LoginInput) => {
   if (!isMatch) throw new Error('INVALID_CREDENTIALS')
 
   const token = signToken({ id: user.id })
-  return { token, user: { name: user.name, email: user.email, avatar: user.avatar } }
+  return {
+    token,
+    user: { _id: user.id.toString(), name: user.name, email: user.email, avatar: user.avatar },
+  }
 }
