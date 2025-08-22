@@ -48,3 +48,9 @@ export async function updateProjectService(
   project.description = updates.description ?? project.description
   return await project.save()
 }
+
+export const deleteProjectService = async (projectId: string, userId: string) => {
+  // 只刪除該 user 擁有的專案
+  const result = await Project.findOneAndDelete({ _id: projectId, owner: userId })
+  return result // 找不到或沒有權限會回傳 null
+}

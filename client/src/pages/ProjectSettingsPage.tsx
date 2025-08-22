@@ -8,11 +8,13 @@ import { useState, useEffect } from 'react'
 import NewProjectModal from '@/components/NewProjectModal'
 import { useCreateProject } from '@/hooks/useCreateProject'
 import { useUpdateProject } from '@/hooks/useUpdateProject'
+import { useDeleteProject } from '@/hooks/useDeleteProject'
 import KeywordSearch from '@/components/ui/KeywordSearch'
 import CollapseToggleButton from '@/components/ui/CollapseToggleButton'
 import DeleteButton from '@/components/ui/DeleteButton'
 import PanelHeader from '@/components/ui/PanelHeader'
 import FormActionButtons from '@/components/ui/FormActionButtons'
+import TableFooter from '@/components/TableFooter'
 
 export default function ProjectSettingsPage() {
   useDocumentTitle('測試案例 - Testhub')
@@ -33,6 +35,15 @@ export default function ProjectSettingsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { createProject, loading, error } = useCreateProject()
   const { updateProject, saving } = useUpdateProject()
+  const { deleteProject } = useDeleteProject()
+
+  // ...在 ProjectSettingsPage 內
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 15
+
+  // 計算分頁資料
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const pagedProjects = filteredProjects.slice(startIndex, startIndex + itemsPerPage)
 
   const selectedProject =
     filteredProjects.find((p) => p._id === selectedProjectId) ??
@@ -115,7 +126,7 @@ export default function ProjectSettingsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredProjects.map((project) => {
+                  {pagedProjects.map((project) => {
                     const isSelected = project._id === selectedProjectId
                     const isHovered = project._id === hoveredProjectId
                     return (
@@ -148,10 +159,11 @@ export default function ProjectSettingsPage() {
                             />
 
                             <DeleteButton
-                              onDelete={() => handleDeleteProject(project._id)}
+                              onDelete={() => deleteProject(project._id)}
                               tooltip="刪除專案"
                               selected={isSelected}
                               hovered={isHovered}
+                              disabled={project.owner !== userId}
                             />
                           </div>
                         </td>
@@ -162,10 +174,13 @@ export default function ProjectSettingsPage() {
               </table>
             </div>
 
-            {/* 表格 */}
-            <div className="flex p-3 bg-[rgba(0,113,140,0.05)] dark:bg-[rgb(40,40,40)]">
-              ..個結果
-            </div>
+            {/* 表格底部資訊區 */}
+            <TableFooter
+              totalItems={filteredProjects.length}
+              itemsPerPage={itemsPerPage}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
           </div>
 
           {/* 右側專案設定 */}

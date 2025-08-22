@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useSidebarStore } from '@/stores/sidebarStore'
 
 interface ModalProps {
   isOpen: boolean
@@ -8,10 +9,12 @@ interface ModalProps {
 }
 
 export default function Modal({ isOpen, isExpand, onClose, children }: ModalProps) {
+  const { collapsed } = useSidebarStore()
+  
   if (!isOpen) return null
 
   return (
-    <div className="fixed top-13 left-36 bottom-0 right-0 z-50 flex justify-end">
+    <div className={`fixed ${collapsed ? 'left-20' : 'left-36'} top-13 bottom-0 right-0 z-50 flex justify-end`}>
       {/* 背景遮罩 */}
       <div
         className="absolute inset-0 bg-[rgba(0,0,0,0.75)] z-0"

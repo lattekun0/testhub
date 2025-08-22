@@ -19,9 +19,10 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline',
         login: 'bg-primary text-primary-foreground shadow-xs hover:bg-[#08748c] hover:text-white',
         nav: 'bg-[#0d6e81] hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/20',
-        green: 'gap-1 max-h-6.5 bg-[rgb(0,228,185)] text-black dark:text-white dark:hover:text-black font-bold rounded hover:text-white hover:bg-[rgb(0,177,144)] dark:hover:bg-[rgb(0,228,185)]',
-        blue:'max-h-6.5 text-black font-bold rounded dark:text-white bg-[rgba(79,221,255,0.45)] dark:hover:text-black',
-        gray:'max-h-6.5 text-gray-400 font-bold rounded bg-[rgb(56,56,56)]'
+        green:
+          'gap-1 max-h-6.5 bg-[rgb(0,228,185)] text-black dark:text-white dark:hover:text-black font-bold rounded hover:text-white hover:bg-[rgb(0,177,144)] dark:hover:bg-[rgb(0,228,185)]',
+        blue: 'max-h-6.5 text-black font-bold rounded dark:text-white bg-[rgba(79,221,255,0.45)] dark:hover:text-black',
+        gray: 'max-h-6.5 text-gray-400 font-bold rounded bg-[rgb(56,56,56)]',
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',
@@ -58,4 +59,4 @@ function Button({
   )
 }
 
-export { Button }
+export { Button, buttonVariants }

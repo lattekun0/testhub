@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import { PanelRightClose, PanelLeftClose } from 'lucide-react'
 import { SidebarLink } from './SidebarLink'
 import { mainLinks, groupLinks, settingsLink } from './sidebar-links'
+import { useSidebarStore } from '@/stores/sidebarStore'
 
 export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false)
+  const { collapsed, toggle } = useSidebarStore()
 
   return (
     <aside className={`flex flex-col justify-between ${collapsed ? 'w-16' : 'w-32'}`}>
@@ -29,7 +29,7 @@ export default function Sidebar() {
 
         <button
           aria-label="Toggle Sidebar"
-          onClick={() => setCollapsed((prev) => !prev)}
+          onClick={toggle}
           className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
         >
           {collapsed ? <PanelRightClose size={20} /> : <PanelLeftClose size={20} />}
